@@ -1,0 +1,62 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Sensor</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <link rel="stylesheet" href="css/main.css"/>
+</head>
+
+<body>
+
+<section id="main" class="wrapper">
+    <div class="inner">
+
+        <header id="heading">
+            <h1>Sensors in system:</h1>
+        </header>
+
+        <div class="highlights">
+            <section th:each="sensorElem:${sensors}">
+                <div class="content">
+                    <header>
+                        <h3 th:text="${sensorElem.name}"/>
+                        <!--<a class="icon fa-dribbble"/>-->
+                    </header>
+                    <table>
+                        <tr>
+                            <td>Last Message:</td>
+                            <td th:text="${sensorElem.lastMessage}"/>
+                        </tr>
+                        <tr>
+                            <td>Creation Time:</td>
+                            <td th:text="${sensorElem.creationTime}"/>
+                        </tr>
+                        <tr>
+                            <td>Blocked:</td>
+                            <td th:text="${sensorElem.blocked}"/>
+                        </tr>
+                        <tr>
+                            <td>Plant:</td>
+                            <td th:text="${sensorElem.plant.name}"/>
+                        </tr>
+                    </table>
+
+                    <a class="button primary" th:if="${sensorElem.blocked}" th:href="@{/unblockSensor/{id}(id=${sensorElem.name})}" th:text="'Unblock ' + ${sensorElem.name}" />
+                    <a class="button primary" th:unless="${sensorElem.blocked}" th:href="@{/blockSensor/{id}(id=${sensorElem.name})}" th:text="'Block ' + ${sensorElem.name}" />
+                </div>
+            </section>
+        </div>
+
+        <div th:if="${message}">
+            <h2 th:text="${message}"/>
+        </div>
+
+    </div>
+</section>
+
+</body>
+</html>

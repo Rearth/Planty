@@ -1,0 +1,79 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Add Plant</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <link rel="stylesheet" href="css/main.css"/>
+</head>
+
+<body>
+
+<section id="main" class="wrapper">
+    <div class="inner">
+
+        <header id="heading">
+            <h1>Plants in system:</h1>
+        </header>
+
+        <div class="highlights">
+            <section th:each="plantElem:${plantList}">
+                <div class="content" style="text-align:left;">
+                    <header>
+                        <h3 th:text="${plantElem.name}"/>
+                        <a th:href="@{/displayPlant/{id}(id=${plantElem.id})}">
+                            <img th:src="@{${'/getImage/' + plantElem.fileName}}" style="width:196px;height:196px;text-align:center;"/>
+                        </a>
+                    </header>
+                    <dl >
+                        <dt>Plant type:</dt>
+                        <dd th:text="${plantElem.plantKind}"/>
+                        <dt>Hydration status:</dt>
+                        <dd th:text="${plantElem.waterLevel}"/>
+                    </dl>
+                </div>
+            </section>
+        </div>
+
+        <div th:if="${message}">
+            <h2 th:text="${message}"/>
+        </div>
+
+        <div class="content">
+
+            <a class="button" href="/showSensors">Sensors</a>
+
+            <header>
+                <h2>Add a new plant</h2>
+            </header>
+            <form action="#" th:action="@{/createPlant}" th:object="${plant}" method="post"
+                  enctype="multipart/form-data">
+
+                <label for="name">Name</label>
+                <input type="text" th:field="*{name}" id="name" placeholder="Name"/>
+                <br>
+
+                <label for="kind">Plant Kind</label>
+                <input type="text" th:field="*{plantKind}" id="kind" placeholder="Kind"/>
+                <br>
+
+                <label for="kind">Water required:</label>
+                <input type="number" step="0.05" th:field="*{waterRequirement}" id="waterWant" placeholder="0.3"/>
+                <br>
+
+                <label for="file">Picture of Plant</label>
+                <input type="file" name="file" id="file"/>
+                <br>
+                <br>
+
+                <input type="submit" value="Add Plant"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

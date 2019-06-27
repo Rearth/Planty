@@ -1,0 +1,115 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Plant</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <link rel="stylesheet" href="/css/main.css"/>
+</head>
+<body>
+
+<section id="main" class="wrapper">
+    <div class="inner">
+
+        <div th:if="${sensorCreation}">
+            <h2 th:text="${sensorCreation}"/>
+        </div>
+
+        <div class="content">
+            <header class="special">
+                <h2 th:text="${plant.name}"/>
+            </header>
+
+            <div>
+                Kind: <span th:text="${plant.plantKind}"/>
+            </div>
+            <div>
+                <img th:src="@{${'/getImage/' + plant.fileName}}" alt="image of plant" style="width:256px;height:256px">
+            </div>
+
+            <div>
+                Water Level: <span th:text="${plant.waterLevel}"/>
+            </div>
+            <div>
+                Minimum Water Level: <span th:text="${plant.waterRequirement}"/>
+            </div>
+            <a class="button primary" th:href="@{/deletePlant/{id}(id=${plant.id})}">Delete</a>
+
+            <header class="special">Analysis</header>
+            <table>
+                <thead>
+                <tr>
+                    <td>Current State</td>
+                    <td>Average Loss Rate</td>
+                    <td>Next Watering event good time</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${analysis.currentState}"/>
+                    <td th:text="${analysis.AvgLossRate}"/>
+                    <td th:text="${analysis.nextAdditionExpected}"/>
+                </tr>
+                </tbody>
+            </table>
+
+            <header>
+                <h2>Add a new Sensor</h2>
+            </header>
+            <form action="#" th:action="@{/createSensor}" th:object="${plant}" method="post">
+
+                <label for="name">Name</label>
+                <input type="text" th:field="*{name}" id="name" th:placeholder="@{${plant.name + 'sensor'}}"/>
+                <br>
+
+                <input type="hidden" name="plantid" th:value="${plant.id}" />
+
+                <input type="submit" value="Create Sensor"/>
+            </form>
+
+            <header class="special">Watering Events</header>
+            <table>
+                <thead>
+                <tr>
+                    <td>Start Time</td>
+                    <td>End Time</td>
+                    <td>Added Amount</td>
+                </tr>
+                </thead>
+                <tbody><tr th:each="event:${analysis.events}">
+                    <td th:text="${event.startTime}"/>
+                    <td th:text="${event.endTime}"/>
+                    <td th:text="${event.addedAmount}"/>
+                </tr>
+                </tbody>
+            </table>
+
+            <header class="special">Logs</header>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Timestamp</td>
+                        <td>Sensor</td>
+                        <td>Water Level</td>
+                        <td>Event id</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="updateElem:${updates}">
+                        <td th:text="${updateElem.msgTimestamp}"/>
+                        <td th:text="${updateElem.sensorOrigin.name}"/>
+                        <td th:text="${updateElem.waterLevel}"/>
+                        <td th:text="${updateElem.eventId}"/>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
