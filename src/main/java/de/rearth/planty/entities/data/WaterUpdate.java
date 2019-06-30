@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 //represents a plant being watered at a specific moment
@@ -39,5 +40,12 @@ public class WaterUpdate implements Comparable {
     @Override
     public int compareTo(Object o) {
         return ((WaterUpdate) o).getMsgTimestamp().compareTo(msgTimestamp);
+    }
+
+    @Transient
+    String formattedTimestamp;
+
+    public String getFormattedTimestamp() {
+        return new SimpleDateFormat("EEE HH:mm").format(getMsgTimestamp());
     }
 }

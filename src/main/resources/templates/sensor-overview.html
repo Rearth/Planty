@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     <meta name="description" content=""/>
     <meta name="keywords" content=""/>
-    <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/sb-admin-2.css"/>
 </head>
 
 <body>
@@ -45,11 +45,33 @@
                         </tr>
                     </table>
 
-                    <a class="button primary" th:if="${sensorElem.blocked}" th:href="@{/unblockSensor/{id}(id=${sensorElem.name})}" th:text="'Unblock ' + ${sensorElem.name}" />
-                    <a class="button primary" th:unless="${sensorElem.blocked}" th:href="@{/blockSensor/{id}(id=${sensorElem.name})}" th:text="'Block ' + ${sensorElem.name}" />
+                    <a class="button primary" th:if="${sensorElem.blocked}"
+                       th:href="@{/unblockSensor/{id}(id=${sensorElem.name})}"
+                       th:text="'Unblock ' + ${sensorElem.name}"/>
+                    <a class="button primary" th:unless="${sensorElem.blocked}"
+                       th:href="@{/blockSensor/{id}(id=${sensorElem.name})}" th:text="'Block ' + ${sensorElem.name}"/>
                 </div>
             </section>
         </div>
+
+        <header>
+            <h2>Add a new Sensor</h2>
+        </header>
+
+        <form action="#" th:action="@{/createSensor}" th:object="${sensorcreator}" method="post">
+
+            <label for="plantid">Name</label>
+            <select id="plantid" name="plantid" >
+                <option th:each="plantElem:${plantList}" th:value="${plantElem.id}" th:text="${plantElem.name}"/>
+            </select>
+            <br>
+
+            <label for="name">Name</label>
+            <input type="text" th:field="*{name}" id="name" placeholder="sensorName"/>
+            <br>
+
+            <input type="submit" value="Create Sensor"/>
+        </form>
 
         <div th:if="${message}">
             <h2 th:text="${message}"/>

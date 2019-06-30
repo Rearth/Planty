@@ -20,4 +20,7 @@ public interface WaterUpdateRepository extends CrudRepository<WaterUpdate, Long>
     //@Query("SELECT u FROM ( SELECT u from WATER_UPDATE u where u.plant=?1 ORDER BY EVENT_ID DESC LIMIT 50) sub ORDER BY EVENT_ID ASC")
     List<WaterUpdate> findUpdatesByPlant(Plant plant, int count);
 
+    @Query("SELECT u FROM WaterUpdate u WHERE u.plant=?1")
+    List<WaterUpdate> findUpdatesByPlant(Plant plant);
+
 }

@@ -73,8 +73,8 @@ public class APIController {
             Sensor sensor = sensorRepository.findById(sensorName).get();
             sensor.setLastMessage(now);
 
-            if (sensor.isBlocked()) {
-                return new response(counter.incrementAndGet(), false, null, "sensor blocked");
+            if (sensor.isBlocked() || sensor.getPlant().getId() != plantID) {
+                return new response(counter.incrementAndGet(), false, null, "sensor blocked or plant id doesnt match sensor");
             }
 
             WaterUpdate update = new WaterUpdate();

@@ -43,6 +43,7 @@ public class PlantController {
 
     @GetMapping("/showPlants")
     public String showOverview(Model model) {
+
         model.addAttribute("plant", new Plant());
 
         if (StreamSupport.stream(plantRepository.findAll().spliterator(), false).count() > 0) {
@@ -56,6 +57,18 @@ public class PlantController {
     @GetMapping("/")
     public String showLandingPage(Model model) {
         return showOverview(model);
+    }
+
+    @GetMapping("/createPlant")
+    public String showNewPlantForm(Model model) {
+
+        model.addAttribute("plant", new Plant());
+
+        if (StreamSupport.stream(plantRepository.findAll().spliterator(), false).count() > 0) {
+            model.addAttribute("plantList", plantRepository.findAll());
+        }
+
+        return "create-plant";
     }
 
     @PostMapping("/createPlant")
@@ -88,7 +101,7 @@ public class PlantController {
             sensorRepository.save(sensor);
         }
 
-        return showPlantDetails(plantID, model);
+        return "#";
     }
 
 
@@ -122,6 +135,12 @@ public class PlantController {
         sensorRepository.findAll().forEach(sensors::add);
         model.addAttribute("sensors", sensors);
 
+        if (StreamSupport.stream(plantRepository.findAll().spliterator(), false).count() > 0) {
+            model.addAttribute("plantList", plantRepository.findAll());
+        }
+
+        model.addAttribute("sensorcreator", new Sensor());
+
         return "sensor-overview";
     }
 
@@ -133,8 +152,8 @@ public class PlantController {
 
         model.addAttribute("plant", plant);
 
-        if (updates.size() > 100) {
-            model.addAttribute("updates", updates.subList(updates.size() - 100, updates.size() - 1));
+        if (updates.size() > 500) {
+            model.addAttribute("updates", updates.subList(updates.size() - 500, updates.size() - 1));
         } else {
             model.addAttribute("updates", updates);
         }
@@ -147,6 +166,10 @@ public class PlantController {
 
         Sensor modelDummy = new Sensor();
         model.addAttribute("sensor, ", modelDummy);
+
+        if (StreamSupport.stream(plantRepository.findAll().spliterator(), false).count() > 0) {
+            model.addAttribute("plantList", plantRepository.findAll());
+        }
         return "plant-details";
     }
 }

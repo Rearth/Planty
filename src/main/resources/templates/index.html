@@ -2,17 +2,129 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Add Plant</title>
+    <title>Planty</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     <meta name="description" content=""/>
     <meta name="keywords" content=""/>
-    <link rel="stylesheet" href="css/main.css"/>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.css" rel="stylesheet">
+
 </head>
 
-<body>
+<body id="page-top">
 
-<section id="main" class="wrapper">
+<div id="wrapper">
+    <span style="background-color: #224abe;" th:insert="navbar :: navbar"></span>
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+
+            <!--TopBar-->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                <!-- Topbar Search -->
+                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="TODO"
+                               aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </nav>
+
+            <div class="container-fluid">
+
+                <!--Plant dashboard title-->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Plant overview</h1>
+                </div>
+
+                <!--Plant cards-->
+                <div class="row">
+                    <!-- Plant card -->
+                    <div th:each="plantElem:${plantList}" class="col-xl-3 col-md-6 mb-4">
+                        <a th:if="${plantElem.waterPercentage >= 1.1}" th:href="@{/displayPlant/{id}(id=${plantElem.id})}" class="card border-left-success shadow h-100 py-3">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div th:text="${plantElem.plantKind}" class="text-xs font-weight-bold text-primary text-uppercase mb-1" />
+                                        <div th:text="${plantElem.name}" class="h2 mb-0 font-weight-bold text-gray-800" />
+                                    </div>
+                                    <div class="col-auto">
+                                        <i>
+                                            <img th:src="@{${'/getImage/' + plantElem.fileName}}" style="width:64px;height:64px;text-align:center;"/>
+                                        </i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                        <a th:if="${plantElem.waterPercentage < 1.1}" th:href="@{/displayPlant/{id}(id=${plantElem.id})}" class="card border-left-danger shadow h-100 py-3">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div th:text="${plantElem.plantKind}" class="text-xs font-weight-bold text-primary text-uppercase mb-1" />
+                                        <div th:text="${plantElem.name}" class="h2 mb-0 font-weight-bold text-gray-800" />
+                                    </div>
+                                    <div class="col-auto">
+                                        <i th:href="@{/displayPlant/{id}(id=${plantElem.id})}">
+                                            <img th:src="@{${'/getImage/' + plantElem.fileName}}" style="width:64px;height:64px;text-align:center;"/>
+                                        </i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+
+                <!-- Add new plant -->
+                <a th:href="@{/createPlant}" class="btn btn-success btn-icon-split">
+                    <span class="icon text-white-50">
+                      <i class="fas fa-plus"></i>
+                    </span>
+                    <span class="text">Add new plant</span>
+                </a>
+                <div class="my-4"/>
+
+                <!--Notification title-->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Notifications</h1>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="vendor/chart.js/Chart.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="js/demo/chart-area-demo.js"></script>
+<script src="js/demo/chart-pie-demo.js"></script>
+
+<!--<section id="main" class="wrapper">
     <div class="inner">
 
         <header id="heading">
@@ -73,7 +185,7 @@
             </form>
         </div>
     </div>
-</section>
+</section>-->
 
 </body>
 </html>

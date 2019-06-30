@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Getter
@@ -15,10 +16,15 @@ public class WaterAnalysis {
     private static final int updateSeconds = 5;
     private static final int minDataRequired = 40;
 
+
     private List<WateringEvent> events;
     private Date nextAdditionExpected;
     private float AvgLossRate; //per x seconds
     private String currentState;
+    @Transient
+    private String lastEventTime;
+    @Transient
+    private String formattedNextWaterTime;
 
     public WaterAnalysis(List<WaterUpdate> updates, Plant plant, WateringEventRepository wateringEventRepository) {
 
@@ -48,6 +54,27 @@ public class WaterAnalysis {
         }
 
 
+    }
+
+    public String getLastEventTime() {
+        try {
+            Date date = events.get(events.size() - 1).endTime;
+            return formatDate(date);
+        } catch (Exception ex) {
+            return "no data found";
+        }
+    }
+
+    public String getFormattedNextWaterTime() {
+        return formatDate(this.getNextAdditionExpected());
+    }
+
+    private String formatDate(Date date) {
+        try {
+            return new SimpleDateFormat("EEE, HH:mm").format(date);
+        } catch (NullPointerException ex) {
+            return "no data found";
+        }
     }
 
     //method is used to find all WateringEvents in the given list
@@ -145,15 +172,15 @@ public class WaterAnalysis {
         int daysToLastWater = daysBetween(lastWaterEvent, new Date());
 
          if (level > targetLevel + 0.3f && daysToLastWater > 2) {
-            return "too much water";
+            return "Too much water";
         } else if (level > targetLevel && daysToNextWater >= 1) {
-            return "perfectly watered";
+            return "Perfectly watered";
         } else if (level > targetLevel) {
-            return "should be watered soon";
+            return "Should be watered soon";
         } else if (level > targetLevel - 0.1) {
-            return "need to be watered";
+            return "Needs to be watered";
         } else if (level < targetLevel) {
-            return "desperately need water";
+            return "Desperately needs water";
         }
 
         return "unknown error";

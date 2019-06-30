@@ -1,0 +1,223 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Add a new Plant</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+
+    <!-- Custom fonts for this template-->
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+<div id="wrapper">
+    <span style="background-color: #224abe;" th:insert="navbar :: navbar"></span>
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+
+            <!--TopBar-->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                <!-- Topbar Search -->
+                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="TODO"
+                               aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </nav>
+
+            <div class="container-fluid">
+
+                <!--plant form title-->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h2 mb-0 text-gray-800">Add a new plant</h1>
+                </div>
+
+                <div class="col-lg-7">
+                    <form action="#" th:action="@{/createPlant}" th:object="${plant}" method="post"
+                          class="user form-group"
+                          enctype="multipart/form-data">
+
+                        <label class="text-xs text-gray-800" for="name">Name</label>
+                        <input class="form-control form-control-user" type="text" th:field="*{name}" id="name"
+                               placeholder="Name" autofocus pattern=".{2,50}" required title="2 to 50 characters"/>
+                        <br>
+
+                        <label class="text-xs text-gray-800" for="kind">Plant Kind</label>
+                        <input class="form-control form-control-user" type="text" th:field="*{plantKind}" id="kind"
+                               placeholder="Kind" pattern=".{2,50}" required title="2 to 50 characters" />
+                        <br>
+
+                        <label class="text-xs text-gray-800" for="kind">Water required:</label>
+                        <input class="form-control form-control-user" type="number" step="0.01" min="0.01" max="0.95"
+                               th:field="*{waterRequirement}" id="waterWant" placeholder="0.3" required/>
+                        <br>
+
+                        <label class="text-xs text-gray-800" for="file">Picture of Plant</label>
+                        <br>
+                        <input type="file" name="file" id="file" required/>
+                        <br>
+                        <hr>
+
+                        <a class="btn btn-success btn-icon-split">
+                            <span class="icon text-white-50">
+                              <i class="fas fa-plus"></i>
+                            </span>
+                            <input class="text" style="background-color: transparent; border: none; color: white" type="submit" value="  Add plant  "/>
+                        </a>
+
+                        <!--<input class="btn btn-success btn-icon-split" type="submit" value="Add Plant" />-->
+                        <!--<input type="submit"/>-->
+
+                    </form>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="/vendor/chart.js/Chart.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="/js/demo/chart-area-demo.js"></script>
+<script src="/js/demo/chart-pie-demo.js"></script>
+
+</body>
+</html>
+<!--
+<section id="main" class="wrapper">
+    <div class="inner">
+
+        <div th:if="${sensorCreation}">
+            <h2 th:text="${sensorCreation}"/>
+        </div>
+
+        <div class="content">
+            <header class="special">
+                <h2 th:text="${plant.name}"/>
+            </header>
+
+            <div>
+                Kind: <span th:text="${plant.plantKind}"/>
+            </div>
+            <div>
+                <img th:src="@{${'/getImage/' + plant.fileName}}" alt="image of plant" style="width:256px;height:256px">
+            </div>
+
+            <div>
+                Water Level: <span th:text="${plant.waterLevel}"/>
+            </div>
+            <div>
+                Minimum Water Level: <span th:text="${plant.waterRequirement}"/>
+            </div>
+            <a class="button primary" th:href="@{/deletePlant/{id}(id=${plant.id})}">Delete</a>
+
+            <header>
+                <h2>Add a new Sensor</h2>
+            </header>
+
+            <form action="#" th:action="@{/createSensor}" th:object="${plant}" method="post">
+
+                <label for="name">Name</label>
+                <input type="text" th:field="*{name}" id="name" th:placeholder="@{${plant.name + 'sensor'}}"/>
+                <br>
+
+                <input type="hidden" name="plantid" th:value="${plant.id}" />
+
+                <input type="submit" value="Create Sensor"/>
+            </form>
+
+            <header>
+                <h2>Analysis</h2>
+            </header>
+
+            <table>
+                <thead>
+                <tr>
+                    <td>Current State</td>
+                    <td>Average Loss Rate</td>
+                    <td>Next Watering event good time</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${analysis.currentState}"/>
+                    <td th:text="${analysis.AvgLossRate}"/>
+                    <td th:text="${analysis.nextAdditionExpected}"/>
+                </tr>
+                </tbody>
+            </table>
+
+            <header class="special">Watering Events</header>
+            <table>
+                <thead>
+                <tr>
+                    <td>Start Time</td>
+                    <td>End Time</td>
+                    <td>Added Amount</td>
+                </tr>
+                </thead>
+                <tbody><tr th:each="event:${analysis.events}">
+                    <td th:text="${event.startTime}"/>
+                    <td th:text="${event.endTime}"/>
+                    <td th:text="${event.addedAmount}"/>
+                </tr>
+                </tbody>
+            </table>
+
+            <header class="special">Logs</header>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Timestamp</td>
+                        <td>Sensor</td>
+                        <td>Water Level</td>
+                        <td>Event id</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="updateElem:${updates}">
+                        <td th:text="${updateElem.msgTimestamp}"/>
+                        <td th:text="${updateElem.sensorOrigin.name}"/>
+                        <td th:text="${updateElem.waterLevel}"/>
+                        <td th:text="${updateElem.eventId}"/>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</section>
+
+</body>
+</html>-->
