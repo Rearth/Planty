@@ -28,9 +28,9 @@
             <!--TopBar-->
             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                 <!-- Topbar Search -->
-                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                <form action="/search/" method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" >
                     <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="TODO"
+                        <input id="query" name="query" type="text" class="form-control bg-light border-0 small" placeholder="Enter Text"
                                aria-label="Search" aria-describedby="basic-addon2">
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="button">
@@ -56,37 +56,16 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-lg-8">
-                        <!--Chart-->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">History</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="chart-area">
-                                    <div class="chartjs-size-monitor">
-                                        <div class="chartjs-size-monitor-expand">
-                                            <div class=""></div>
-                                        </div>
-                                        <div class="chartjs-size-monitor-shrink">
-                                            <div class=""></div>
-                                        </div>
-                                    </div>
-                                    <canvas id="myAreaChart"
-                                            style="display: block; height: 320px; width: 393px;" width="589"
-                                            height="480"
-                                            class="chartjs-render-monitor"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <!--Details-->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Status
-                                <span th:text="${plant.plantKind}" class="float-right text-xs text-gray-800"/></h6>
-
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1" th:text="${plant.plantKind}" />
+                            <div class="h4 mb-0 font-weight-bold text-gray-800">Status</div>
+                            <!--<h6 class="m-0 font-weight-bold text-primary">Status
+                                <span th:text="${plant.plantKind}" class="float-right text-xs text-gray-800"/></h6>-->
                         </div>
+
+
                         <div class="card-body" style="width: 20rem;">
 
                             <div>
@@ -108,7 +87,7 @@
                             </div>
 
                             <h4 class="small font-weight-bold">Last time watered: <span
-                                    th:text="${analysis.lastEventTime}" class="float-right"/></h4>
+                                    th:if="${analysis.lastEventTime}" th:text="${analysis.lastEventTime}" class="float-right"/></h4>
                             <h4 class="small font-weight-bold">State: <span
                                     th:text="${analysis.currentState}" class="float-right"/></h4>
                             <h4 class="small font-weight-bold">Water until:: <span
@@ -116,6 +95,33 @@
 
                         </div>
 
+                    </div>
+                    <!--Chart-->
+                    <div class="col-lg-8">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">History</h6>
+                            </div>
+                            <div class="card-body">
+                                <div th:if="${not #lists.isEmpty(updates)}" class="chart-area">
+                                    <div class="chartjs-size-monitor">
+                                        <div class="chartjs-size-monitor-expand">
+                                            <div class=""></div>
+                                        </div>
+                                        <div class="chartjs-size-monitor-shrink">
+                                            <div class=""></div>
+                                        </div>
+                                    </div>
+                                    <canvas id="myAreaChart"
+                                            style="display: block; height: 320px; width: 393px;" width="589"
+                                            height="480"
+                                            class="chartjs-render-monitor"></canvas>
+                                </div>
+                                <div th:if="${#lists.isEmpty(updates)}">
+                                    No data to display
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

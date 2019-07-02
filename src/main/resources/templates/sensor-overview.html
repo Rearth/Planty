@@ -2,6 +2,225 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <title>Sensor Overview</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+
+    <!-- Custom fonts for this template-->
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin-2.css" rel="stylesheet">
+    <link href="/css/plant.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+<div th:if="${message}" class="card mb-3 py-0 border-bottom-info notification">
+    <div class="card-body" style="padding: 1.3rem;">
+        <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+                <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${message}"/>
+            </div>
+            <div class="col-auto">
+                <i class="fas fa-info-circle fa-2x text-info add-margin-m"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="wrapper">
+    <span style="background-color: #224abe;" th:insert="navbar :: navbar"></span>
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+
+            <!--TopBar-->
+            <span style="background-color: #224abe;" th:insert="navbar :: searchbar"></span>
+
+            <div class="container-fluid">
+
+                <!--Plant dashboard title-->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Sensors</h1>
+                </div>
+                <!--Sensor card area-->
+                <div class="row">
+                    <!--All Sensor Cards-->
+                    <div th:each="sensorElem:${sensors}" class="col-lg-3">
+                        <div class="card mb-4">
+                            <!-- Sensor Card -->
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h3 th:text="${sensorElem.name}" class="m-0 font-weight-bold text-primary"/>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                         aria-labelledby="dropdownMenuLink" x-placement="bottom-end"
+                                         style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(17px, 19px, 0px);">
+                                        <div class="dropdown-header">Actions:</div>
+                                        <a class="dropdown-item" th:href="@{/deleteSensor/{id}(id=${sensorElem.name})}">Delete</a>
+                                        <a class="dropdown-item" th:if="${sensorElem.blocked}"
+                                           th:href="@{/unblockSensor/{id}(id=${sensorElem.name})}">Unblock</a>
+                                        <a class="dropdown-item" th:unless="${sensorElem.blocked}"
+                                           th:href="@{/blockSensor/{id}(id=${sensorElem.name})}">Block</a>
+                                        <a class="dropdown-item" th:href="@{/getConfiguration/{id}(id=${sensorElem.name})}">Get Configuration</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!--Status card-->
+                                <div th:if="${sensorElem.active}" class="card mb-3 py-0 border-bottom-success"
+                                     style="border:none;">
+                                    <div class="card-body" style="padding: 0.8rem;">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">Active</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-check fa-2x text-success"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div th:unless="${sensorElem.active}" class="card mb-3 py-1 border-bottom-danger"
+                                     style="border:none;">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div th:text="'Last Message: ' + ${#dates.format(sensorElem.lastMessage, 'EEE, dd.MMM HH:mm:ss')}"
+                                                     class="text-xs font-weight-bold text-info text-uppercase mb-1"/>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">Inactive</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="fas fa-minus-circle fa-2x text-danger"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--Plant Card-->
+                                <a th:href="@{/displayPlant/{id}(id=${sensorElem.plant.id})}"
+                                   class="card mb-3 py-0 border-bottom-primary">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                    Plant:
+                                                </div>
+                                                <div th:text="${sensorElem.plant.name}"
+                                                     class="h5 mb-0 font-weight-bold text-gray-800"/>
+                                            </div>
+                                            <div class="col-auto">
+                                                <img th:src="@{${'/getImage/' + sensorElem.plant.fileName}}"
+                                                     alt="image of plant"
+                                                     style="width: 3rem; height: 2.5rem;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <!--Other data-->
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Created at:</div>
+                                <div th:text="${#dates.format(sensorElem.creationTime, 'EEE, dd.MMM HH:mm:ss')}"
+                                     class="h5 mb-0 font-weight-bold text-gray-800"/>
+                                <hr>
+
+                                <!--Block/unblock button-->
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Rules:</div>
+                                <div th:if="${sensorElem.blocked}" class="h5 mb-0 font-weight-bold text-gray-800">
+                                    Blocked
+
+                                </div>
+                                <div th:unless="${sensorElem.blocked}" class="h5 mb-0 font-weight-bold text-gray-800">
+                                    Unblocked
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Add new sensor-->
+                <div class="col-lg-5 ">
+                    <div class="card mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="h5 m-0 font-weight-bold text-primary">Add a new Sensor</h5>
+                        </div>
+
+                        <div class="card-body">
+
+                            <form th:action="@{/createSensor}" th:object="${sensorcreator}" method="post">
+
+                                <label class="text-xs font-weight-bold text-info text-uppercase mb-1" for="plantid">Plant</label>
+                                <br>
+                                <select class="add-margin-s" required id="plantid" name="plantid">
+                                    <option th:each="plantElem:${plantList}" th:value="${plantElem.id}"
+                                            th:text="${plantElem.name}"/>
+                                </select>
+                                <br>
+                                <br>
+
+                                <label class="text-xs font-weight-bold text-info text-uppercase mb-1"
+                                       for="name">Name</label>
+                                <input class="form-control form-control-user add-margin-s" type="text"
+                                       th:field="*{name}" id="name"
+                                       placeholder="Name" pattern="[^\s]*" required
+                                       title="Name may not contains spaces"/>
+                                <hr>
+                                <a class="btn btn-success btn-icon-split">
+                                    <span class="icon text-white-50">
+                                      <i class="fas fa-plus"></i>
+                                    </span>
+                                    <input class="text"
+                                           style="background-color: transparent; border: none; color: white"
+                                           type="submit" value="  Add Sensor  ">
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="/js/sb-admin-2.min.js"></script>
+
+<!-- Page level plugins -->
+<script src="/vendor/chart.js/Chart.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="/js/demo/chart-area-demo.js"></script>
+<script src="/js/demo/chart-pie-demo.js"></script>
+
+</body>
+</html>
+
+
+<!--
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
     <title>Sensor</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
@@ -24,7 +243,7 @@
                 <div class="content">
                     <header>
                         <h3 th:text="${sensorElem.name}"/>
-                        <!--<a class="icon fa-dribbble"/>-->
+                        &lt;!&ndash;<a class="icon fa-dribbble"/>&ndash;&gt;
                     </header>
                     <table>
                         <tr>
@@ -81,4 +300,4 @@
 </section>
 
 </body>
-</html>
+</html>-->

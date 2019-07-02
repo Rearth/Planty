@@ -1,4 +1,4 @@
-package de.rearth.planty.entities.data;
+package de.rearth.planty.entities;
 
 import de.rearth.planty.controllers.PlantController;
 import de.rearth.planty.repositories.WaterUpdateRepository;
@@ -8,7 +8,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.Collections;
 import java.util.List;
 
 @Entity

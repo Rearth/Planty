@@ -1,4 +1,4 @@
-package de.rearth.planty.entities.data;
+package de.rearth.planty.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +24,7 @@ public class Sensor {
     @NotBlank
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Plant.class)
+    @ManyToOne(cascade = CascadeType.DETACH, targetEntity = Plant.class)
     @JoinColumn(name="id")
     private Plant plant;
 
@@ -34,5 +34,17 @@ public class Sensor {
     @Temporal(TemporalType.TIMESTAMP)
     Date lastMessage;
 
+    public boolean isActive() {
+        if (getLastMessage() == null) {
+            return false;
+        }
+        //in milliseconds
+        long diff = new Date().getTime() - getLastMessage().getTime();
+        //convert to minutes
+        diff = diff / 1000 / 60;
 
+        //longer than 5 minutes counts as inactive
+        return diff < 5;
+
+    }
 }

@@ -15,7 +15,6 @@
 
     <!-- Custom styles for this template-->
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
-
 </head>
 
 <body id="page-top">
@@ -26,20 +25,7 @@
         <div id="content">
 
             <!--TopBar-->
-            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                <!-- Topbar Search -->
-                <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="TODO"
-                               aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="button">
-                                <i class="fas fa-search fa-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </nav>
+            <span style="background-color: #224abe;" th:insert="navbar :: searchbar"></span>
 
             <div class="container-fluid">
 
@@ -50,28 +36,29 @@
 
                 <div class="col-lg-7">
                     <form action="#" th:action="@{/createPlant}" th:object="${plant}" method="post"
-                          class="user form-group"
                           enctype="multipart/form-data">
 
-                        <label class="text-xs text-gray-800" for="name">Name</label>
-                        <input class="form-control form-control-user" type="text" th:field="*{name}" id="name"
-                               placeholder="Name" autofocus pattern=".{2,50}" required title="2 to 50 characters"/>
+                        <label class="text-xs font-weight-bold text-info text-uppercase mb-1" for="name">Name</label>
+                        <input class="form-control form-control-user add-margin-m" type="text" th:field="*{name}" id="name"
+                               placeholder="Name" autofocus pattern=".{2,50}" required title="2 to 50 characters" style="margin-left: 8px;margin-top: 4px;"/>
                         <br>
 
-                        <label class="text-xs text-gray-800" for="kind">Plant Kind</label>
-                        <input class="form-control form-control-user" type="text" th:field="*{plantKind}" id="kind"
-                               placeholder="Kind" pattern=".{2,50}" required title="2 to 50 characters" />
+                        <label class="text-xs font-weight-bold text-info text-uppercase mb-1" for="kind">Plant Kind</label>
+                        <input class="form-control form-control-user add-margin-m" type="text" th:field="*{plantKind}" id="kind"
+                               placeholder="Kind" pattern=".{2,50}" required title="2 to 50 characters" style="margin-left: 8px;margin-top: 4px;" />
                         <br>
 
-                        <label class="text-xs text-gray-800" for="kind">Water required:</label>
-                        <input class="form-control form-control-user" type="number" step="0.01" min="0.01" max="0.95"
-                               th:field="*{waterRequirement}" id="waterWant" placeholder="0.3" required/>
+                        <label class="text-xs font-weight-bold text-info text-uppercase mb-1" for="kind">Water required:</label>
+                        <input class="form-control form-control-user add-margin-m" type="number" step="0.01" min="0.01" max="0.95"
+                               th:field="*{waterRequirement}" id="waterWant" placeholder="0.3" required style="margin-left: 8px;margin-top: 4px;"/>
                         <br>
 
-                        <label class="text-xs text-gray-800" for="file">Picture of Plant</label>
+                        <label class="text-xs font-weight-bold text-info text-uppercase mb-1" for="file">Picture of Plant</label>
                         <br>
-                        <input type="file" name="file" id="file" required/>
+
+                        <input type="file" name="file" id="file" class="add-margin-m" accept="image/*" required style="margin-left: 8px;margin-top: 4px;"/>
                         <br>
+
                         <hr>
 
                         <a class="btn btn-success btn-icon-split">
@@ -80,9 +67,6 @@
                             </span>
                             <input class="text" style="background-color: transparent; border: none; color: white" type="submit" value="  Add plant  "/>
                         </a>
-
-                        <!--<input class="btn btn-success btn-icon-split" type="submit" value="Add Plant" />-->
-                        <!--<input type="submit"/>-->
 
                     </form>
 

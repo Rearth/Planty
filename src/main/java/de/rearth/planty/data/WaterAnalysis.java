@@ -1,13 +1,18 @@
-package de.rearth.planty.entities.data;
+package de.rearth.planty.data;
 
+import de.rearth.planty.entities.Plant;
+import de.rearth.planty.entities.WaterUpdate;
+import de.rearth.planty.entities.WateringEvent;
 import de.rearth.planty.repositories.WateringEventRepository;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Transient;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -40,7 +45,7 @@ public class WaterAnalysis {
 
         //store all new elements in db, then query db for all existing elements
         for (WateringEvent event : events) {
-            if (!wateringEventRepository.existsById(event.startTime)) {
+            if (!wateringEventRepository.existsById(event.getStartTime())) {
                 wateringEventRepository.save(event);
             }
         }
@@ -48,7 +53,7 @@ public class WaterAnalysis {
         events = wateringEventRepository.findallByPlant(plant);
 
         if (events.size() >= 1) {
-            this.currentState = findCurrentState(updates, plant, nextAdditionExpected, events.get(events.size() - 1).endTime);
+            this.currentState = findCurrentState(updates, plant, nextAdditionExpected, events.get(events.size() - 1).getEndTime());
         } else {
             this.currentState = "not enough data";
         }
@@ -58,7 +63,7 @@ public class WaterAnalysis {
 
     public String getLastEventTime() {
         try {
-            Date date = events.get(events.size() - 1).endTime;
+            Date date = events.get(events.size() - 1).getEndTime();
             return formatDate(date);
         } catch (Exception ex) {
             return "no data found";
@@ -110,13 +115,13 @@ public class WaterAnalysis {
                     //end of rising event
                     rising = false;
                     WateringEvent evt = new WateringEvent();
-                    evt.startTime = startingAt.getMsgTimestamp();
-                    evt.endTime = elem.getMsgTimestamp();
-                    evt.addedAmount = elem.getWaterLevel() - startingAt.getWaterLevel();
-                    evt.plant = plant;
+                    evt.setStartTime(startingAt.getMsgTimestamp());
+                    evt.setEndTime(elem.getMsgTimestamp());
+                    evt.setAddedAmount(elem.getWaterLevel() - startingAt.getWaterLevel());
+                    evt.setPlant(plant);
 
                     //discard events with too little change, could just be measurement mistakes
-                    if (evt.addedAmount < 0.1 || ignoreStart) {
+                    if (evt.getAddedAmount() < 0.1 || ignoreStart) {
                         continue;
                     }
 
@@ -188,20 +193,5 @@ public class WaterAnalysis {
 
     private static int daysBetween(Date d1, Date d2){
         return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
-    }
-
-    @Data
-    @Entity
-    public static class WateringEvent {
-        @Id
-        private Date startTime;
-        private Date endTime;
-        private float addedAmount;
-
-        //just for database
-        @ManyToOne(cascade = CascadeType.ALL, targetEntity = Plant.class)
-        @JoinColumn(name="id")
-        private Plant plant;
-
     }
 }

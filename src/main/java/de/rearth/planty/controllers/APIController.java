@@ -1,9 +1,9 @@
 package de.rearth.planty.controllers;
 
-import de.rearth.planty.entities.data.Plant;
-import de.rearth.planty.entities.data.Sensor;
-import de.rearth.planty.entities.data.WaterAnalysis;
-import de.rearth.planty.entities.data.WaterUpdate;
+import de.rearth.planty.entities.Plant;
+import de.rearth.planty.entities.Sensor;
+import de.rearth.planty.data.WaterAnalysis;
+import de.rearth.planty.entities.WaterUpdate;
 import de.rearth.planty.repositories.PlantRepository;
 import de.rearth.planty.repositories.SensorRepository;
 import de.rearth.planty.repositories.WaterUpdateRepository;
@@ -72,6 +72,7 @@ public class APIController {
 
             Sensor sensor = sensorRepository.findById(sensorName).get();
             sensor.setLastMessage(now);
+            sensorRepository.save(sensor);
 
             if (sensor.isBlocked() || sensor.getPlant().getId() != plantID) {
                 return new response(counter.incrementAndGet(), false, null, "sensor blocked or plant id doesnt match sensor");

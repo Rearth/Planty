@@ -4880,7 +4880,7 @@ input[type="button"].btn-block {
   transition: all 0.5s ease;
 }
 
-.card:hover {
+a.card:hover {
   border: 1px solid #a3a690;
   border-radius: 0.45rem;
   text-decoration: none;
@@ -10789,6 +10789,10 @@ a:focus {
 
 .text-xs {
   font-size: .7rem;
+}
+
+.text-xxs {
+    font-size: .5rem;
 }
 
 .text-lg {

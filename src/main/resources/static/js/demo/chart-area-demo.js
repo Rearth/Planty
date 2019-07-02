@@ -33,7 +33,7 @@ var myLineChart = new Chart(ctx, {
       lineTension: 0.2,
       backgroundColor: "rgba(78, 115, 223, 0.05)",
       borderColor: "rgba(78, 115, 223, 1)",
-      pointRadius: 2,
+      pointRadius: 0,
       pointBackgroundColor: "rgba(78, 115, 223, 1)",
       pointBorderColor: "rgba(78, 115, 223, 1)",
       pointHoverRadius: 3,
@@ -56,7 +56,8 @@ var myLineChart = new Chart(ctx, {
     },
     scales: {
       xAxes: [{
-        time: {
+          scaleStartValue : 0,
+          time: {
           unit: 'date'
         },
         gridLines: {

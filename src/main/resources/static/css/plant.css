@@ -1,41 +1,28 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
-
-svg {
-    fill: rgb(242, 242, 242);
-    height: 3.6rem;
-    width: 3.6rem;
-    margin: 0.2rem;
+.card-space {
+    margin: 1rem;
 }
 
-.logo {
-    fill: #94d31b;
-}
-#radios label {
-    position: relative;
+.add-margin-s {
+    margin-left: 0.5rem;
+    margin-top: 0.2rem;
 }
 
-input[type="radio"] {
+.add-margin-m {
+    margin-left: 0.8rem;
+}
+
+.add-margin-l {
+    margin-left: 1.2rem;
+}
+
+.notification {
     position: absolute;
-    opacity: 0;
+    top: 80px;
+    left: 40%;
+    z-index: 101;
 }
 
-input[type="radio"] + svg {
-    -webkit-transition: all 0.2s;
-    transition: all 0.2s;
-}
-
-input + svg {
-    cursor: pointer;
-}
-
-input[class="super-happy"]:hover + svg,
-input[class="super-happy"]:checked + svg,
-input[class="super-happy"]:focus + svg {
-    fill: rgb(0, 109, 217);
-}
-
-input[class="happy"]:hover + svg,
-input[class="happy"]:checked + svg,
-input[class="happy"]:focus + svg {
-    fill: rgb(0, 204, 79);
+.navbar-title {
+    text-align: center;
+    width: 100%;
 }

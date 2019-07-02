@@ -1,12 +1,14 @@
 package de.rearth.planty.controllers;
 
-import de.rearth.planty.entities.data.Plant;
-import de.rearth.planty.entities.data.Sensor;
-import de.rearth.planty.entities.data.WaterAnalysis;
-import de.rearth.planty.entities.data.WaterUpdate;
+import de.rearth.planty.data.Search;
+import de.rearth.planty.entities.Plant;
+import de.rearth.planty.entities.Sensor;
+import de.rearth.planty.data.WaterAnalysis;
+import de.rearth.planty.entities.WaterUpdate;
 import de.rearth.planty.repositories.PlantRepository;
 import de.rearth.planty.repositories.SensorRepository;
 import de.rearth.planty.repositories.WaterUpdateRepository;
+import de.rearth.planty.repositories.WateringEventRepository;
 import de.rearth.planty.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,7 @@ public class PlantController {
     private final StorageService storageService;
     private final PlantRepository plantRepository;
     private static WaterUpdateRepository waterUpdateRepository;
+    private final WateringEventRepository wateringEventRepository;
     private final SensorRepository sensorRepository;
 
     public static WaterUpdateRepository getWaterUpdateRepository() {
@@ -34,10 +37,11 @@ public class PlantController {
     }
 
     @Autowired
-    public PlantController(StorageService storageService, PlantRepository plantRepository, WaterUpdateRepository updateRepository, SensorRepository sensorRepository) {
+    public PlantController(StorageService storageService, PlantRepository plantRepository, WaterUpdateRepository updateRepository, WateringEventRepository wateringEventRepository, SensorRepository sensorRepository) {
         this.storageService = storageService;
         this.plantRepository = plantRepository;
         waterUpdateRepository = updateRepository;
+        this.wateringEventRepository = wateringEventRepository;
         this.sensorRepository = sensorRepository;
     }
 
@@ -72,7 +76,7 @@ public class PlantController {
     }
 
     @PostMapping("/createPlant")
-    public String createPlantSubmit(@Valid Plant plant, BindingResult result, @RequestParam("file") MultipartFile file,  Model model) {
+    public String createPlantSubmit(@Valid Plant plant, BindingResult result, @RequestParam("file") MultipartFile file, Model model) {
 
         if (result.hasErrors()) {
             model.addAttribute("message", "unable to add plant" + result);
@@ -92,16 +96,15 @@ public class PlantController {
     public String createSensorSubmit(@Valid Sensor sensor, BindingResult result, @RequestParam("plantid") long plantID, Model model) {
 
         if (result.hasErrors()) {
-            model.addAttribute("sensorCreation", "unable to add sensor" + result);
+            model.addAttribute("message", "unable to add sensor" + result);
         } else {
-            model.addAttribute("sensorCreation", " successfully added sensor: " + sensor.getName());
             sensor.setCreationTime(new Date());
             sensor.setBlocked(false);
             sensor.setPlant(plantRepository.findById(plantID).get());
             sensorRepository.save(sensor);
         }
 
-        return "#";
+        return showSensorOverview(model);
     }
 
 
@@ -112,12 +115,28 @@ public class PlantController {
         return "redirect:/showPlants";
     }
 
+    @RequestMapping("/deleteSensor/{name}")
+    public String deleteSensor(@PathVariable("name") String id, Model model) {
+        Sensor sensor = sensorRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid Sensor Id:" + id));
+        sensorRepository.delete(sensor);
+        model.addAttribute("message", "Successfully deleted " + sensor.getName());
+        return showSensorOverview(model);
+    }
+
     @RequestMapping("/blockSensor/{name}")
     public String blockSensor(@PathVariable("name") String id, Model model) {
         Sensor sensor = sensorRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid Sensor Id:" + id));
         sensor.setBlocked(true);
         sensorRepository.save(sensor);
-        return "redirect:/showSensors";
+        return showSensorOverview(model);
+    }
+
+    @RequestMapping("/getConfiguration/{name}")
+    public String getSensorConfig(@PathVariable("name") String id, Model model) {
+        Sensor sensor = sensorRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid Sensor Id:" + id));
+
+        model.addAttribute("message", "Name: " + sensor.getName() + " Plant ID: " + sensor.getPlant().getId());
+        return showSensorOverview(model);
     }
 
     @RequestMapping("/unblockSensor/{name}")
@@ -125,7 +144,19 @@ public class PlantController {
         Sensor sensor = sensorRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid Sensor Id:" + id));
         sensor.setBlocked(false);
         sensorRepository.save(sensor);
-        return "redirect:/showSensors";
+        return showSensorOverview(model);
+    }
+
+    @RequestMapping("/search/")
+    public String diplaySearch(@RequestParam("query") String query, Model model) {
+        if (StreamSupport.stream(plantRepository.findAll().spliterator(), false).count() > 0) {
+            model.addAttribute("plantList", plantRepository.findAll());
+        }
+        model.addAttribute("query", query);
+
+        Search search = new Search(plantRepository, waterUpdateRepository, sensorRepository, wateringEventRepository, query);
+
+        return "searchResult";
     }
 
     @GetMapping("/showSensors")

@@ -1,6 +1,6 @@
 package de.rearth.planty.repositories;
 
-import de.rearth.planty.entities.data.Plant;
+import de.rearth.planty.entities.Plant;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

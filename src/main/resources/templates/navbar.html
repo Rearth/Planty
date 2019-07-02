@@ -9,13 +9,29 @@
 
 <div id="wrapper">
 
+
+    <nav th:fragment="searchbar" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <!-- Topbar Search -->
+        <form action="/search/" method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" >
+            <div class="input-group">
+                <input id="query" name="query" type="text" class="form-control bg-light border-0 small" placeholder="Enter Text"
+                       aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </nav>
+
     <ul th:fragment="navbar" class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
         id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
             <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-balance-scale"></i>
+                <i class="fas fa-seedling"></i>
             </div>
             <div class="sidebar-brand-text mx-3">Planty</div>
         </a>
@@ -41,7 +57,7 @@
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-fw fa-cog"></i>
+                <i class="fas fa-fw fa-spa"></i>
                 <span>Plant Details</span>
             </a>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -64,7 +80,7 @@
 
         <!-- Nav Item - Sensors -->
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" th:href="@{/showSensors}">
                 <i class="fas fa-fw fa-database"></i>
                 <span>Sensors</span></a>
         </li>
@@ -78,6 +94,14 @@
 
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
+
+
+        <!-- Nav Item - Settings -->
+        <li class="nav-item">
+            <a class="nav-link" href="#">
+                <i class="fas fa-fw fa-info-circle"></i>
+                <span>Help</span></a>
+        </li>
 
         <!-- Sidebar Toggler (Sidebar) -->
         <div class="text-center d-none d-md-inline">
