@@ -11,15 +11,10 @@ import de.rearth.planty.repositories.WateringEventRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -43,22 +38,7 @@ public class APIController {
         this.sensorRepository = sensorRepository;
 
         //initialize dict with available data
-        plantRepository.findAll().forEach(plant -> {
-            analysisDictionary.put(plant.getId(), new WaterAnalysis(waterUpdateRepository.findUpdatesByPlant(plant, 200), plant, wateringEventRepository));
-        });
-
-    }
-
-    @RequestMapping(value = "/getImage/{imageId}")
-    @ResponseBody
-    public byte[] getImage(@PathVariable String imageId, HttpServletRequest request) {
-        byte[] data = new byte[0];
-        try {
-            data = Files.readAllBytes(Paths.get("upload-dir/" + imageId));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return data;
+        plantRepository.findAll().forEach(plant -> analysisDictionary.put(plant.getId(), new WaterAnalysis(waterUpdateRepository.findUpdatesByPlant(plant, 200), plant, wateringEventRepository)));
     }
 
 

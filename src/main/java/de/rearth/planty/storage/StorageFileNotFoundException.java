@@ -1,6 +1,6 @@
 package de.rearth.planty.storage;
 
-public class StorageFileNotFoundException extends StorageException {
+class StorageFileNotFoundException extends StorageException {
 
     public StorageFileNotFoundException(String message) {
         super(message);

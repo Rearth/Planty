@@ -36,7 +36,7 @@ public class Plant {
     @Transient
     private float waterLevel;
 
-    public float getWaterLevel() {
+    private float getWaterLevel() {
 
         WaterUpdateRepository updateRepository = PlantController.getWaterUpdateRepository();
 
@@ -57,7 +57,9 @@ public class Plant {
     @Transient
     private float waterPercentage;
 
-    public float getWaterPercentage() {
-        return getWaterLevel() / getWaterRequirement();
-    }
+// --Commented out by Inspection START (09.08.19 04:48):
+//    public float getWaterPercentage() {
+//        return getWaterLevel() / getWaterRequirement();
+//    }
+// --Commented out by Inspection STOP (09.08.19 04:48)
 }

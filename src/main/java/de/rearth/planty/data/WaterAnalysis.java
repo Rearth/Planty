@@ -43,12 +43,8 @@ public class WaterAnalysis {
         this.nextAdditionExpected = findNextAddition(updates, AvgLossRate, plant);
 
 
-        //store all new elements in db, then query db for all existing elements
-        for (WateringEvent event : events) {
-            if (!wateringEventRepository.existsById(event.getStartTime())) {
-                wateringEventRepository.save(event);
-            }
-        }
+        //store all new elements in db
+        syncWithDB(plant, wateringEventRepository);
 
         events = wateringEventRepository.findallByPlant(plant);
 
@@ -59,6 +55,14 @@ public class WaterAnalysis {
         }
 
 
+    }
+
+    private void syncWithDB(Plant plant, WateringEventRepository wateringEventRepository) {
+        for (WateringEvent event : events) {
+            if (!wateringEventRepository.existsById(event.getStartTime())) {
+                wateringEventRepository.save(event);
+            }
+        }
     }
 
     public String getLastEventTime() {
@@ -106,7 +110,7 @@ public class WaterAnalysis {
 
                 if (!rising) {
                     //first rising event
-                    startingAt = elem;
+                    startingAt = updates.get(i - 1);
                     rising = true;
                 }
                 //water isnt rising
@@ -114,18 +118,12 @@ public class WaterAnalysis {
                 if (rising) {
                     //end of rising event
                     rising = false;
-                    WateringEvent evt = new WateringEvent();
-                    evt.setStartTime(startingAt.getMsgTimestamp());
-                    evt.setEndTime(elem.getMsgTimestamp());
-                    evt.setAddedAmount(elem.getWaterLevel() - startingAt.getWaterLevel());
-                    evt.setPlant(plant);
 
-                    //discard events with too little change, could just be measurement mistakes
-                    if (evt.getAddedAmount() < 0.1 || ignoreStart) {
+                    //ignore data if its at the start of the dataset or too small (could be a measurement mistake)
+                    if (ignoreStart || elem.getWaterLevel() - startingAt.getWaterLevel() < 0.1f)
                         continue;
-                    }
 
-                    events.add(evt);
+                    createEvent(plant, events, startingAt, updates.get(i - 1));
                 }
             }
 
@@ -133,6 +131,16 @@ public class WaterAnalysis {
         }
 
         return events;
+    }
+
+    private static void createEvent(Plant plant, List<WateringEvent> events, WaterUpdate startingAt, WaterUpdate elem) {
+        WateringEvent evt = new WateringEvent();
+        evt.setStartTime(startingAt.getMsgTimestamp());
+        evt.setEndTime(elem.getMsgTimestamp());
+        evt.setAddedAmount(elem.getWaterLevel() - startingAt.getWaterLevel());
+        evt.setPlant(plant);
+
+        events.add(evt);
     }
 
     //finds the average water loss rate in the last n updates
@@ -176,7 +184,7 @@ public class WaterAnalysis {
         int daysToNextWater = daysBetween(new Date(), nextEvent);
         int daysToLastWater = daysBetween(lastWaterEvent, new Date());
 
-         if (level > targetLevel + 0.3f && daysToLastWater > 2) {
+        if (level > targetLevel + 0.3f && daysToLastWater > 2) {
             return "Too much water";
         } else if (level > targetLevel && daysToNextWater >= 1) {
             return "Perfectly watered";
@@ -191,7 +199,7 @@ public class WaterAnalysis {
         return "unknown error";
     }
 
-    private static int daysBetween(Date d1, Date d2){
-        return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+    private static int daysBetween(Date d1, Date d2) {
+        return (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
     }
 }

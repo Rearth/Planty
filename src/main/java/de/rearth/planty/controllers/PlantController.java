@@ -87,6 +87,9 @@ public class PlantController {
             String fileName = file.getOriginalFilename();
             plant.setFileName(fileName);
             plantRepository.save(plant);
+
+
+            APIController.analysisDictionary.put(plant.getId(), new WaterAnalysis(waterUpdateRepository.findUpdatesByPlant(plant, 200), plant, wateringEventRepository));
         }
 
         return showOverview(model);
@@ -192,6 +195,7 @@ public class PlantController {
         WaterAnalysis analysis = APIController.analysisDictionary.get(plant.getId());
         if (analysis == null) {
             System.out.println("analysis is null");
+            model.addAttribute("message", "No analysis found");
         }
         model.addAttribute("analysis", analysis);
 

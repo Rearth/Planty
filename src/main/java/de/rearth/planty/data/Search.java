@@ -7,14 +7,6 @@ import de.rearth.planty.repositories.WateringEventRepository;
 
 public class Search {
 
-    //data repositories
-    private final PlantRepository plantRepository;
-    private final WaterUpdateRepository waterUpdateRepository;
-    private final SensorRepository sensorRepository;
-    private final WateringEventRepository wateringRepository;
-
-    private final String query;
-
     public enum searchType {
         Date, Text, Floating, Decimal
     }
@@ -25,11 +17,12 @@ public class Search {
     //Search SensorRepository by text(name, plantName, activeState, BlockedState/Name), date(creationDate, lastMessage)
 
     public Search(PlantRepository plantRepository, WaterUpdateRepository waterUpdateRepository, SensorRepository sensorRepository, WateringEventRepository wateringRepository, String query) {
-        this.plantRepository = plantRepository;
-        this.waterUpdateRepository = waterUpdateRepository;
-        this.sensorRepository = sensorRepository;
-        this.wateringRepository = wateringRepository;
-        this.query = query;
+        //data repositories
+        PlantRepository plantRepository1 = plantRepository;
+        WaterUpdateRepository waterUpdateRepository1 = waterUpdateRepository;
+        SensorRepository sensorRepository1 = sensorRepository;
+        WateringEventRepository wateringRepository1 = wateringRepository;
+        String query1 = query;
 
         searchType searchType = findSearchType(query);
     }
@@ -39,12 +32,12 @@ public class Search {
         try {
             Integer.valueOf(query);
             return searchType.Decimal;
-        } catch(NumberFormatException ex) {};
+        } catch(NumberFormatException ignored) {}
 
         try {
             Float.valueOf(query);
             return searchType.Floating;
-        } catch(NumberFormatException ex) {};
+        } catch(NumberFormatException ignored) {}
 
 
         return null;
