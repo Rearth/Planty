@@ -79,7 +79,7 @@ public class PlantController {
     public String createPlantSubmit(@Valid Plant plant, BindingResult result, @RequestParam("file") MultipartFile file, Model model) {
 
         if (result.hasErrors()) {
-            model.addAttribute("message", "unable to add plant" + result);
+            model.addAttribute("message", "unable to add plant " + result + " plant: " + plant.toString());
         } else {
             model.addAttribute("message", " successfully added Plant: " + plant.getName());
             storageService.store(file);

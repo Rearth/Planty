@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.within;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class EmployeeRepositoryIntegrationTest {
+public class WaterAnalysisTest {
  
     @Autowired
     private TestEntityManager entityManager;

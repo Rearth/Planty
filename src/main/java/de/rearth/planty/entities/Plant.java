@@ -18,25 +18,25 @@ public class Plant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    public long id;
 
     @NotBlank
-    private String name;
+    public String name;
 
     @NotBlank
-    private String plantKind;
+    public String plantKind;
 
     //waterRequirement is the minimum amount of water the plant should have
-    private float waterRequirement;
+    public float waterRequirement;
 
     //name of the picture on the storage system
-    private String fileName;
+    public String fileName;
 
     //description of the plant, whether or not it has enough water
     @Transient
-    private float waterLevel;
+    public float waterLevel;
 
-    private float getWaterLevel() {
+    public float getWaterLevel() {
 
         WaterUpdateRepository updateRepository = PlantController.getWaterUpdateRepository();
 
@@ -55,9 +55,22 @@ public class Plant {
     }
 
     @Transient
-    private float waterPercentage;
+    public float waterPercentage;
 
-// --Commented out by Inspection START (09.08.19 04:48):
+    @Override
+    public String toString() {
+        return "Plant{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", plantKind='" + plantKind + '\'' +
+                ", waterRequirement=" + waterRequirement +
+                ", fileName='" + fileName + '\'' +
+                ", waterLevel=" + waterLevel +
+                ", waterPercentage=" + waterPercentage +
+                '}';
+    }
+
+    // --Commented out by Inspection START (09.08.19 04:48):
 //    public float getWaterPercentage() {
 //        return getWaterLevel() / getWaterRequirement();
 //    }
