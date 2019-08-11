@@ -18,16 +18,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
+//used to recieve data from a real sensor on a plant
 @Controller
 public class APIController {
 
+    //increment counter used to assign IDs to incoming events
     private final AtomicLong counter = new AtomicLong();
 
+    //Connections to the DB
     private final PlantRepository plantRepository;
     private final WaterUpdateRepository waterUpdateRepository;
     private final WateringEventRepository wateringEventRepository;
     private final SensorRepository sensorRepository;
 
+    //Storing all analysis in a dictionary, available to all other classes since its public and static
     public static final Map<Long, WaterAnalysis> analysisDictionary = new HashMap<>();
 
     @Autowired
@@ -38,15 +42,16 @@ public class APIController {
         this.sensorRepository = sensorRepository;
 
         //initialize dict with available data
+        //on startup the application analyzes stored data in the DB to have some data available for the user
         plantRepository.findAll().forEach(plant -> analysisDictionary.put(plant.getId(), new WaterAnalysis(waterUpdateRepository.findUpdatesByPlant(plant, 200), plant, wateringEventRepository)));
     }
 
-
+    //GET- and POST requests are handled here
     @RequestMapping(value = "/api/waterevent")
     public @ResponseBody response uploadEvent(@RequestParam(value="sensorName") String sensorName, @RequestParam(value="plantID") long plantID, @RequestParam(value="waterLevel") float waterLevel) {
 
         try {
-
+            //Find the corresponding sensor in the DB and create a new WaterUpdate event
             Date now = new Date();
             Plant plant = plantRepository.findById(plantID).get();
 
@@ -68,6 +73,7 @@ public class APIController {
             }
             update.setWaterLevel(waterLevel);
 
+            //store new update in DB, and analyze new Data
             waterUpdateRepository.save(update);
             analysisDictionary.put(plant.getId(), new WaterAnalysis(waterUpdateRepository.findUpdatesByPlant(plant, 100), plant, wateringEventRepository));
 

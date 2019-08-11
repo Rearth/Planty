@@ -5,6 +5,7 @@ import de.rearth.planty.repositories.SensorRepository;
 import de.rearth.planty.repositories.WaterUpdateRepository;
 import de.rearth.planty.repositories.WateringEventRepository;
 
+//Not used yet, still WIP
 public class Search {
 
     public enum searchType {

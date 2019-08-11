@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-//represents a plant being watered at a specific moment
+//represents a plant's water level at a specific moment
 @Entity
 @Getter
 @Setter

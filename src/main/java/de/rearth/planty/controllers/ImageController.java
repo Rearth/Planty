@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+//used to provide the frontend with the pictures of the plants, which are stored on the server's filesystem
 @Controller
 public class ImageController {
 

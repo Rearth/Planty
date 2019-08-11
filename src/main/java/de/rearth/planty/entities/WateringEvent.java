@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.Date;
 
+//represents the event of water being added to a plant
 @Data
 @Entity
 public class WateringEvent {

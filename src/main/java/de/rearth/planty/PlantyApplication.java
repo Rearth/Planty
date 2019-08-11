@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.nio.file.Paths;
 
+//Application stats with this class
 @SpringBootApplication
 public class PlantyApplication implements WebMvcConfigurer {
 

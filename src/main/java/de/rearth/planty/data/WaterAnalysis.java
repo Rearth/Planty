@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+//Class that contains all relevant data that can be found for a plant.
 @Getter
 @Setter
 public class WaterAnalysis {
